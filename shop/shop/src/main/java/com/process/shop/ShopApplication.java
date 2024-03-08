@@ -18,5 +18,4 @@ public class ShopApplication {
 	public static String helloWorld(){
 		return "jelo";
 	}
-
 }
