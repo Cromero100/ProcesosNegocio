@@ -1,44 +1,45 @@
 package com.process.shop.service;
 
-import com.process.shop.model.Address;
-import com.process.shop.model.Enum.DocumentType;
 import com.process.shop.model.User;
+import com.process.shop.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
-
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public User createUser(User user) {
-        return null;
+        return userRepository.save(user);
     }
 
     @Override
     public User updateUser(User userUpdated, Long id) {
-        return null;
+        Optional<User> userBd = userRepository.findById(id);
+        if(userBd.isEmpty()){
+            return null;
+        }
+        userBd.get().setFullName(userUpdated.getFullName());
+        userBd.get().setPhoneNumber(userUpdated.getPhoneNumber());
+        return userRepository.save(userBd.get());
     }
 
     @Override
-    public User getUserById(Long Id) {
-        return User.builder().fullName("Cristian Romero")
-                .mail("cfromerop@ufpso")
-                .documentTypeType(DocumentType.CC)
-                .cc("1005384346")
-                .address(List.of(Address.builder()
-                                .number("123")
-                                .street("calle siempreviva")
-                                .neighborhood("neighborhood").build(),
-                        Address.builder()
-                                .number("321")
-                                .street("calle siempremuerta")
-                                .neighborhood("borhoodneigh").build())).build();
+    public User getUserById(Long id) {
+        Optional<User> user = userRepository.findById(id);
+        if(user.isEmpty()){
+            return null;
+        }
+        return user.get();
     }
 
     @Override
     public List<User> findAllUsers() {
-        return null;
+        return (List<User>) userRepository.findAll();
     }
 }
